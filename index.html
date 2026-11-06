@@ -387,20 +387,35 @@ function nextPron(){
   document.getElementById('pronResult').innerText = '';
 }
 
+
 function checkPronunciation(){
   let res = document.getElementById('pronResult');
-  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
-    res.innerText = 'Use Chrome for voice. Laptop mic not working.';
+  let btn = document.querySelector('button[onclick="checkPronunciation()"]');
+
+  if(isListening){
+    res.innerText = '⏳ Already listening... Speak NOW! Say: ' + pronList[pronIndex].de;
     return;
   }
+
+  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
+    res.innerText = 'Use Chrome for voice.';
+    return;
+  }
+
   let target = pronList[pronIndex].de.toLowerCase();
   let wordsArr = target.split(' ');
   let keyWord = wordsArr[wordsArr.length - 1];
   let firstWord = wordsArr[0];
+
   let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   rec.lang = 'de-DE';
   rec.interimResults = false;
+  rec.continuous = false;
+
+  isListening = true;
+  if(btn) btn.innerText = '🎤 Listening... Speak Now!';
   res.innerText = '🎤 Listening... Say LOUD: ' + pronList[pronIndex].de;
+
   rec.onresult = function(e){
     let heard = e.results[0][0].transcript.toLowerCase();
     pronTotal++;
@@ -412,15 +427,32 @@ function checkPronunciation(){
       res.innerText += ' - Try again. Key word is: ' + keyWord;
     }
     document.getElementById('pronScore').innerText = 'Speaking Score: ' + pronCorrect + ' / ' + pronTotal;
+    isListening = false;
+    if(btn) btn.innerText = '🎤 Speak & Check';
   };
+
   rec.onerror = function(e){
-    if(e.error === 'not-allowed'){ res.innerText = '❌ Mic blocked! Click Lock icon on top -> Allow Microphone -> Refresh'; }
-    else if(e.error === 'no-speech'){ res.innerText = '❌ I heard nothing. Speak LOUDER and closer to laptop.'; }
-    else { res.innerText = 'Try again - Error: ' + e.error; }
+    // Do NOT show aborted - it just means double click, ignore it
+    if(e.error === 'aborted'){
+      res.innerText = 'You clicked twice! Wait 2 seconds and click ONE time only.';
+    } else if(e.error === 'not-allowed'){
+      res.innerText = '❌ Mic blocked! Click Lock icon on top -> Allow Microphone -> Refresh';
+    } else if(e.error === 'no-speech'){
+      res.innerText = '❌ I heard nothing. Speak LOUDER and closer to laptop.';
+    } else {
+      res.innerText = 'Try again - ' + e.error;
+    }
+    isListening = false;
+    if(btn) btn.innerText = '🎤 Speak & Check';
   };
+
+  rec.onend = function(){
+    isListening = false;
+    if(btn) btn.innerText = '🎤 Speak & Check';
+  };
+
   rec.start();
-}
-</script>
+}</script>
 </body>
 </html><!DOCTYPE html>
 <html lang="en">
