@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch AI - Learn German with AI</title>
+<style>
+body { font-family: Arial; background: #f4f4f4; margin: 0; padding: 20px; }
+h1 { text-align: center; }
+p { text-align: center; color: #555; }
+.card { background: white; padding: 15px; margin: 10px auto; max-width: 500px; border-radius: 10px; box-shadow: 0 2px 5px #ddd; }
+.malayalam { font-size: 18px; font-weight: bold; }
+.german { font-size: 20px; color: #0066cc; font-weight: bold; }
+.example { color: #666; font-style: italic; }
+button { display: block; margin: 15px auto; padding: 12px 25px; background: #0066cc; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; display: block; margin: 10px auto; }
+.center { text-align: center; }
+#quizBox { background: white; padding: 20px; max-width: 500px; margin: 20px auto; border-radius: 10px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Deutsch AI 🤖🇩🇪</h1>
+<p>Malayalam to German - Learn with AI - A1 Words</p>
+
+<!-- WORDS -->
+<div class="card"><div class="malayalam">1. Chaya / Coffee</div><div class="german">der Kaffee</div><div class="example">Ich trinke Kaffee.</div></div>
+<div class="card"><div class="malayalam">2. Veedu / House</div><div class="german">das Haus</div><div class="example">Das Haus ist groß.</div></div>
+<div class="card"><div class="malayalam">3. Pusthakam / Book</div><div class="german">das Buch</div><div class="example">Ich lese ein Buch.</div></div>
+<div class="card"><div class="malayalam">4. Vellam / Water</div><div class="german">das Wasser</div><div class="example">Ich trinke Wasser.</div></div>
+<div class="card"><div class="malayalam">5. Snehithan / Friend</div><div class="german">der Freund</div><div class="example">Mein Freund ist nett.</div></div>
+
+<!-- AI CHAT -->
+<div class="card center">
+<h2>🤖 AI Deutsch Partner</h2>
+<p>Ask in English, Get German</p>
+<input id="aiInput" type="text" placeholder="Type: I am hungry / I want water">
+<button onclick="askAI()">Ask AI</button>
+<p id="aiAnswer" style="font-weight:bold; color:#0066cc;"></p>
+</div>
+
+<!-- PRONUNCIATION -->
+<div class="card center">
+<h2>🎤 AI Pronunciation Check</h2>
+<p>Say: Ich trinke Kaffee</p>
+<button onclick="checkPronunciation()">Speak & Check</button>
+<p id="pronResult"></p>
+</div>
+
+<!-- SMART QUIZ -->
+<div id="quizBox">
+<h2>🧠 Smart Quiz</h2>
+<p id="quizQ">What is "Book" in German?</p>
+<button onclick="checkQuiz('das Buch')">das Buch</button>
+<button onclick="checkQuiz('der Kaffee')">der Kaffee</button>
+<button onclick="checkQuiz('das Haus')">das Haus</button>
+<p id="quizResult"></p>
+<p id="score">Score: 0 | AI says: Keep going!</p>
+</div>
+
+<script>
+let score = 0;
+let wrongWords = [];
+
+function askAI(){
+  let q = document.getElementById('aiInput').value.toLowerCase();
+  let ans = document.getElementById('aiAnswer');
+  if(q.includes('hungry') || q.includes('vishak')) ans.innerText = 'AI: Ich habe Hunger.';
+  else if(q.includes('water') || q.includes('vellam')) ans.innerText = 'AI: Ich trinke Wasser.';
+  else if(q.includes('friend')) ans.innerText = 'AI: Mein Freund ist nett.';
+  else if(q.includes('house') || q.includes('veedu')) ans.innerText = 'AI: Das Haus ist groß.';
+  else if(q.includes('book') || q.includes('pusthakam')) ans.innerText = 'AI: Ich lese ein Buch.';
+  else if(q.includes('how are you')) ans.innerText = 'AI: Wie geht es dir?';
+  else if(q.includes('coffee') || q.includes('chaya')) ans.innerText = 'AI: Ich trinke Kaffee.';
+  else ans.innerText = 'AI: Try: I am hungry, I want water, My friend, Book, House, Coffee';
+}
+
+function checkPronunciation(){
+  let res = document.getElementById('pronResult');
+  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+    let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    rec.lang = 'de-DE';
+    rec.onresult = function(e){
+      let said = e.results[0][0].transcript;
+      res.innerText = 'You said: ' + said + ' - Sehr gut! 🎉';
+    };
+    rec.onerror = function(){ res.innerText = 'Try again'; };
+    rec.start();
+    res.innerText = 'Listening... Speak now...';
+  } else {
+    res.innerText = 'Use Chrome on phone for voice.';
+  }
+}
+
+function checkQuiz(answer){
+  let result = document.getElementById('quizResult');
+  if(answer === 'das Buch'){
+    score++;
+    result.innerText = 'Richtig! Correct! 🎉';
+  } else {
+    result.innerText = 'Falsch! Correct is das Buch. AI will show this again.';
+    wrongWords.push('Buch');
+  }
+  document.getElementById('score').innerText = 'Score: ' + score + ' | AI remembers your mistakes: ' + wrongWords.length;
+}
+</script>
+
+</body>
+</html>
