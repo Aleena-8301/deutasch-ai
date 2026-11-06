@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deutsch AI - Learn German with AI</title>
+<title>Deutsch AI v4 - Learn German</title>
 <style>
 body { font-family: Arial; background: #f4f4f4; margin: 0; padding: 20px; }
 h1 { text-align: center; }
@@ -16,19 +16,17 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 </head>
 <body>
 
-<h1>Deutsch AI 🤖🇩🇪</h1>
+<h1>Deutsch AI 🤖 DE - v4</h1>
 <p>Malayalam to German - Type ANY Word</p>
 
-<!-- TRANSLATOR - MAIN FEATURE -->
 <div class="card center">
 <h2>🤖 AI Translator - ANY Word</h2>
 <p>Type English / Malayalam word, get German</p>
-<input id="aiInput" type="text" placeholder="Type ANY word: hello, love, school...">
+<input id="aiInput" type="text" placeholder="Type: I am from India">
 <button onclick="askAI()">Translate - Übersetzen</button>
 <p id="aiAnswer" style="font-weight:bold; color:#0066cc; font-size:18px;"></p>
 </div>
 
-<!-- TYPE & CHECK -->
 <div class="card center">
 <h2>✍️ Type & Check Words</h2>
 <h3 id="showWord" style="color:#0066cc; font-size:22px;">Coffee / Chaya</h3>
@@ -39,7 +37,6 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 <button onclick="nextWord()" style="background:#28a745;">Next Word ➡️</button>
 </div>
 
-<!-- PRONUNCIATION -->
 <div class="card center">
 <h2>🎤 AI Pronunciation Check</h2>
 <p>Say: Ich trinke Kaffee</p>
@@ -64,55 +61,11 @@ let currentIndex = 0;
 let total = 0;
 let correctCount = 0;
 
-// BIG INBUILT DICTIONARY - Works even without internet
-let bigDict = {
-  "hello": "Hallo!",
-  "hi": "Hallo!",
-  "love": "die Liebe - Ich liebe dich.",
-  "school": "die Schule - Ich gehe zur Schule.",
-  "teacher": "der Lehrer",
-  "mother": "die Mutter - Meine Mutter ist nett.",
-  "father": "der Vater",
-  "friend": "der Freund - Mein Freund ist nett.",
-  "house": "das Haus - Das Haus ist groß.",
-  "book": "das Buch - Ich lese ein Buch.",
-  "water": "das Wasser - Ich trinke Wasser.",
-  "coffee": "der Kaffee - Ich trinke Kaffee.",
-  "tea": "der Tee - Ich trinke Tee.",
-  "milk": "die Milch",
-  "bread": "das Brot",
-  "apple": "der Apfel",
-  "dog": "der Hund",
-  "cat": "die Katze",
-  "car": "das Auto",
-  "money": "das Geld",
-  "day": "der Tag",
-  "night": "die Nacht",
-  "good morning": "Guten Morgen!",
-  "good night": "Gute Nacht!",
-  "thank you": "Danke!",
-  "please": "Bitte!",
-  "yes": "Ja!",
-  "no": "Nein!",
-  "how are you": "Wie geht es dir?",
-  "i am hungry": "Ich habe Hunger.",
-  "i want water": "Ich trinke Wasser.",
-  "i love you": "Ich liebe dich.",
-  "my name is aleena": "Ich heiße Aleena.",
-  "where are you": "Wo bist du?",
-  "what is your name": "Wie heißt du?"
-};
-
 function askAI(){
   let q = document.getElementById('aiInput').value.trim();
   let ans = document.getElementById('aiAnswer');
-  if(!q){
-    ans.innerText = 'Type a word first';
-    return;
-  }
+  if(!q){ ans.innerText = 'Type a word first'; return; }
   let lower = q.toLowerCase().replace(/\s+/g, ' ');
-
-  // 100% CORRECT DICTIONARY - App will check this FIRST, so no garbage
   let correctDict = {
     "i am from india": "Ich komme aus Indien.",
     "i am aleena": "Ich bin Aleena.",
@@ -124,16 +77,12 @@ function askAI(){
     "i love my mother": "Ich liebe meine Mutter.",
     "i love you": "Ich liebe dich.",
     "how are you": "Wie geht es dir?",
-    "where are you": "Wo bist du?",
-    "what is your name": "Wie heißt du?",
     "hello": "Hallo!",
     "hi": "Hallo!",
     "good morning": "Guten Morgen!",
     "good night": "Gute Nacht!",
     "thank you": "Danke!",
     "please": "Bitte!",
-    "yes": "Ja!",
-    "no": "Nein!",
     "love": "die Liebe",
     "school": "die Schule",
     "mother": "die Mutter",
@@ -143,69 +92,51 @@ function askAI(){
     "book": "das Buch",
     "water": "das Wasser",
     "coffee": "der Kaffee",
-    "tea": "der Tee",
     "india": "Indien",
-    "germany": "Deutschland",
-    "kerala": "Kerala"
+    "germany": "Deutschland"
   };
-
   if(correctDict[lower]){
     ans.innerText = 'AI: ' + correctDict[lower];
     return;
   }
-
   ans.innerText = 'AI is thinking...';
-
-  // Google Translate - Better than MyMemory
   fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=de&dt=t&q=' + encodeURIComponent(q))
   .then(function(res){ return res.json(); })
   .then(function(data){
     let german = '';
-    // data[0] is list of translated parts
-    for(let i=0; i<data[0].length; i++){
-      german += data[0][i][0];
-    }
+    for(let i=0; i<data[0].length; i++){ german += data[0][i][0]; }
     ans.innerText = 'AI: ' + german;
   })
   .catch(function(){
-    ans.innerText = 'No internet. Try: I am from India, I am Aleena, hello, love';
+    ans.innerText = 'No internet. Try: I am from India, hello, love';
   });
-}function checkWord(){
+}
+
+function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
   let correct = words[currentIndex].german;
   let result = document.getElementById('checkResult');
   total++;
-  if(user === correct){
-    correctCount++;
-    result.innerText = 'Richtig! Correct! 🎉 ' + correct;
-  } else {
-    result.innerText = 'Falsch! Correct is: ' + correct;
-  }
+  if(user === correct){ correctCount++; result.innerText = 'Richtig! Correct! 🎉 ' + correct; }
+  else { result.innerText = 'Falsch! Correct is: ' + correct; }
   document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total;
 }
-
 function nextWord(){
   currentIndex = Math.floor(Math.random() * words.length);
   document.getElementById('showWord').innerText = words[currentIndex].eng;
   document.getElementById('userAnswer').value = '';
   document.getElementById('checkResult').innerText = '';
 }
-
 function checkPronunciation(){
   let res = document.getElementById('pronResult');
   if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
     let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     rec.lang = 'de-DE';
-    rec.onresult = function(e){
-      let said = e.results[0][0].transcript;
-      res.innerText = 'You said: ' + said + ' - Sehr gut! 🎉';
-    };
+    rec.onresult = function(e){ res.innerText = 'You said: ' + e.results[0][0].transcript + ' - Sehr gut! 🎉'; };
     rec.onerror = function(){ res.innerText = 'Try again'; };
     rec.start();
     res.innerText = 'Listening... Speak now...';
-  } else {
-    res.innerText = 'Use Chrome on phone for voice.';
-  }
+  } else { res.innerText = 'Use Chrome on phone for voice.'; }
 }
 </script>
 </body>
