@@ -111,35 +111,47 @@ function nextWord(){
 }
 
 function askAI(){
-  let q = document.getElementById('aiInput').value.toLowerCase();
+  let q = document.getElementById('aiInput').value.trim();
   let ans = document.getElementById('aiAnswer');
-  if(q.includes('hungry')) ans.innerText = 'AI: Ich habe Hunger.';
-  else if(q.includes('water')) ans.innerText = 'AI: Ich trinke Wasser.';
-  else if(q.includes('friend')) ans.innerText = 'AI: Mein Freund ist nett.';
-  else if(q.includes('house')) ans.innerText = 'AI: Das Haus ist groß.';
-  else if(q.includes('book')) ans.innerText = 'AI: Ich lese ein Buch.';
-  else if(q.includes('how are you')) ans.innerText = 'AI: Wie geht es dir?';
-  else if(q.includes('coffee')) ans.innerText = 'AI: Ich trinke Kaffee.';
-  else ans.innerText = 'AI: Try: I am hungry, I want water, My friend, Book, House, Coffee';
-}
-
-function checkPronunciation(){
-  let res = document.getElementById('pronResult');
-  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
-    let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    rec.lang = 'de-DE';
-    rec.onresult = function(e){
-      let said = e.results[0][0].transcript;
-      res.innerText = 'You said: ' + said + ' - Sehr gut! 🎉';
-    };
-    rec.onerror = function(){ res.innerText = 'Try again'; };
-    rec.start();
-    res.innerText = 'Listening... Speak now...';
-  } else {
-    res.innerText = 'Use Chrome on phone for voice.';
+  if(!q){
+    ans.innerText = 'Type a word first - Erst ein Wort tippen';
+    return;
   }
-}
-</script>
+  ans.innerText = 'AI is thinking... KI denkt nach...';
+
+  // First check our inbuilt words for fast answer
+  let inbuilt = {
+    'hello': 'Hallo!',
+    'hi': 'Hallo!',
+    'good morning': 'Guten Morgen!',
+    'good night': 'Gute Nacht!',
+    'thank you': 'Danke!',
+    'please': 'Bitte!',
+    'yes': 'Ja!',
+    'no': 'Nein!',
+    'i am hungry': 'Ich habe Hunger.',
+    'i want water': 'Ich trinke Wasser.',
+    'my friend': 'Mein Freund ist nett.',
+    'book': 'das Buch - Ich lese ein Buch.',
+    'house': 'das Haus - Das Haus ist groß.',
+    'coffee': 'der Kaffee - Ich trinke Kaffee.'
+  };
+
+  let lower = q.toLowerCase();
+  if(inbuilt[lower]){
+    ans.innerText = 'AI: ' + inbuilt[lower];
+    return;
+  }
+  fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=en|de')
+  .then(response => response.json())
+  .then(data => {
+    let german = data.responseData.translatedText;
+    ans.innerText = 'AI: ' + german + '  (German for: ' + q + ')';
+  })
+  .catch(() => {
+    ans.innerText = 'No internet. Check internet and try again.';
+  });
+}</script>
 
 </body>
 </html>
