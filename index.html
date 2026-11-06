@@ -358,14 +358,37 @@ function nextWord(){
 }
 function checkPronunciation(){
   let res = document.getElementById('pronResult');
-  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
-    let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    rec.lang = 'de-DE';
-    rec.onresult = function(e){ res.innerText = 'You said: ' + e.results[0][0].transcript + ' - Sehr gut! 🎉'; };
-    rec.onerror = function(){ res.innerText = 'Try again'; };
-    rec.start();
-    res.innerText = 'Listening... Speak now...';
-  } else { res.innerText = 'Use Chrome on phone for voice.'; }
+  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
+    res.innerText = 'Use Chrome on phone for voice. Laptop mic not working.';
+    return;
+  }
+  let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  rec.lang = 'de-DE';
+  rec.interimResults = false;
+  
+  res.innerText = '🎤 Listening... Say LOUD: Ich trinke Kaffee';
+  
+  rec.onresult = function(e){
+    let heard = e.results[0][0].transcript.toLowerCase();
+    res.innerText = 'You said: ' + heard;
+    if(heard.includes('kaffee') || heard.includes('coffee') || heard.includes('cafe')){
+      res.innerText += ' - Sehr gut! 🎉 You said Kaffee correct!';
+    } else if(heard.includes('trinke') || heard.includes('trink')){
+      res.innerText += ' - Gut! Almost! Try again with Kaffee.';
+    } else {
+      res.innerText += ' - Try again, say: Ich trinke Kaffee';
+    }
+  };
+  rec.onerror = function(e){
+    if(e.error === 'not-allowed'){
+      res.innerText = '❌ Mic blocked! Click Lock icon on top -> Allow Microphone -> Refresh';
+    } else if(e.error === 'no-speech'){
+      res.innerText = '❌ I heard nothing. Speak LOUDER and closer to laptop.';
+    } else {
+      res.innerText = 'Try again - Error: ' + e.error;
+    }
+  };
+  rec.start();
 }
 </script>
 </body>
