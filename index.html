@@ -388,6 +388,10 @@ function nextPron(){
 }
 
 
+let isListening = false;
+let pronTotal = 0;
+let pronCorrect = 0;
+
 function checkPronunciation(){
   let res = document.getElementById('pronResult');
   let btn = document.querySelector('button[onclick="checkPronunciation()"]');
@@ -432,7 +436,6 @@ function checkPronunciation(){
   };
 
   rec.onerror = function(e){
-    // Do NOT show aborted - it just means double click, ignore it
     if(e.error === 'aborted'){
       res.innerText = 'You clicked twice! Wait 2 seconds and click ONE time only.';
     } else if(e.error === 'not-allowed'){
@@ -452,6 +455,7 @@ function checkPronunciation(){
   };
 
   rec.start();
+}
 }</script>
 </body>
 </html><!DOCTYPE html>
