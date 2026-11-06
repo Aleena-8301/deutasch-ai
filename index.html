@@ -110,26 +110,67 @@ function askAI(){
     ans.innerText = 'Type a word first';
     return;
   }
-  let lower = q.toLowerCase();
-  // 1. Check inbuilt first - instant
-  if(bigDict[lower]){
-    ans.innerText = 'AI: ' + bigDict[lower];
+  let lower = q.toLowerCase().replace(/\s+/g, ' ');
+
+  // 100% CORRECT DICTIONARY - App will check this FIRST, so no garbage
+  let correctDict = {
+    "i am from india": "Ich komme aus Indien.",
+    "i am aleena": "Ich bin Aleena.",
+    "my name is aleena": "Ich heiße Aleena.",
+    "i am from kerala": "Ich komme aus Kerala.",
+    "i am a student": "Ich bin Studentin.",
+    "i am hungry": "Ich habe Hunger.",
+    "i want water": "Ich trinke Wasser.",
+    "i love my mother": "Ich liebe meine Mutter.",
+    "i love you": "Ich liebe dich.",
+    "how are you": "Wie geht es dir?",
+    "where are you": "Wo bist du?",
+    "what is your name": "Wie heißt du?",
+    "hello": "Hallo!",
+    "hi": "Hallo!",
+    "good morning": "Guten Morgen!",
+    "good night": "Gute Nacht!",
+    "thank you": "Danke!",
+    "please": "Bitte!",
+    "yes": "Ja!",
+    "no": "Nein!",
+    "love": "die Liebe",
+    "school": "die Schule",
+    "mother": "die Mutter",
+    "father": "der Vater",
+    "friend": "der Freund",
+    "house": "das Haus",
+    "book": "das Buch",
+    "water": "das Wasser",
+    "coffee": "der Kaffee",
+    "tea": "der Tee",
+    "india": "Indien",
+    "germany": "Deutschland",
+    "kerala": "Kerala"
+  };
+
+  if(correctDict[lower]){
+    ans.innerText = 'AI: ' + correctDict[lower];
     return;
   }
-  // 2. If not inbuilt, try internet API for ANY word
+
   ans.innerText = 'AI is thinking...';
-  fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=en|de')
+
+  // Google Translate - Better than MyMemory
+  fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=de&dt=t&q=' + encodeURIComponent(q))
   .then(function(res){ return res.json(); })
   .then(function(data){
-    let german = data.responseData.translatedText;
+    let german = '';
+    // data[0] is list of translated parts
+    for(let i=0; i<data[0].length; i++){
+      german += data[0][i][0];
+    }
     ans.innerText = 'AI: ' + german;
   })
   .catch(function(){
-    ans.innerText = 'No internet. Try: hello, love, school, mother, friend, book - these work offline.';
+    ans.innerText = 'No internet. Try: I am from India, I am Aleena, hello, love';
   });
-}
-
-function checkWord(){
+}function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
   let correct = words[currentIndex].german;
   let result = document.getElementById('checkResult');
