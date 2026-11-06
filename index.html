@@ -9,47 +9,34 @@ body { font-family: Arial; background: #f4f4f4; margin: 0; padding: 20px; }
 h1 { text-align: center; }
 p { text-align: center; color: #555; }
 .card { background: white; padding: 15px; margin: 10px auto; max-width: 500px; border-radius: 10px; box-shadow: 0 2px 5px #ddd; }
-.malayalam { font-size: 18px; font-weight: bold; }
-.german { font-size: 20px; color: #0066cc; font-weight: bold; }
-.example { color: #666; font-style: italic; }
 button { display: block; margin: 15px auto; padding: 12px 25px; background: #0066cc; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
 input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; display: block; margin: 10px auto; }
 .center { text-align: center; }
-.correct { color: green; font-weight: bold; }
-.wrong { color: red; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <h1>Deutsch AI 🤖🇩🇪</h1>
-<p>Malayalam to German - Learn with AI - A1 Words</p>
+<p>Malayalam to German - Type ANY Word</p>
 
-<!-- WORDS LIST -->
-<div class="card"><div class="malayalam">1. Chaya / Coffee</div><div class="german">der Kaffee</div><div class="example">Ich trinke Kaffee.</div></div>
-<div class="card"><div class="malayalam">2. Veedu / House</div><div class="german">das Haus</div><div class="example">Das Haus ist groß.</div></div>
-<div class="card"><div class="malayalam">3. Pusthakam / Book</div><div class="german">das Buch</div><div class="example">Ich lese ein Buch.</div></div>
-<div class="card"><div class="malayalam">4. Vellam / Water</div><div class="german">das Wasser</div><div class="example">Ich trinke Wasser.</div></div>
-<div class="card"><div class="malayalam">5. Snehithan / Friend</div><div class="german">der Freund</div><div class="example">Mein Freund ist nett.</div></div>
+<!-- TRANSLATOR - MAIN FEATURE -->
+<div class="card center">
+<h2>🤖 AI Translator - ANY Word</h2>
+<p>Type English / Malayalam word, get German</p>
+<input id="aiInput" type="text" placeholder="Type ANY word: hello, love, school...">
+<button onclick="askAI()">Translate - Übersetzen</button>
+<p id="aiAnswer" style="font-weight:bold; color:#0066cc; font-size:18px;"></p>
+</div>
 
-<!-- TYPE & CHECK - NEW FEATURE -->
+<!-- TYPE & CHECK -->
 <div class="card center">
 <h2>✍️ Type & Check Words</h2>
-<p>Type the German word and check - Wörter tippen und prüfen</p>
 <h3 id="showWord" style="color:#0066cc; font-size:22px;">Coffee / Chaya</h3>
-<p>What is this in German? Type with der / die / das</p>
 <input id="userAnswer" type="text" placeholder="Type: der Kaffee">
 <button onclick="checkWord()">Check - Prüfen</button>
 <p id="checkResult"></p>
-<p id="scoreText">Score: 0 / 0 | Correct: 0</p>
-<button onclick="nextWord()" style="background:#28a745;">Next Word - Nächstes Wort ➡️</button>
-</div>
-
-<!-- AI CHAT -->
-<div class="card center">
-<h2>🤖 AI Deutsch Partner</h2>
-<input id="aiInput" type="text" placeholder="Type: I am hungry / I want water">
-<button onclick="askAI()">Ask AI</button>
-<p id="aiAnswer" style="font-weight:bold; color:#0066cc;"></p>
+<p id="scoreText">Score: 0 / 0</p>
+<button onclick="nextWord()" style="background:#28a745;">Next Word ➡️</button>
 </div>
 
 <!-- PRONUNCIATION -->
@@ -61,33 +48,86 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 </div>
 
 <script>
-// INBUILT WORDS - 20 Words
 let words = [
   { eng: "Coffee / Chaya", german: "der kaffee" },
   { eng: "House / Veedu", german: "das haus" },
   { eng: "Book / Pusthakam", german: "das buch" },
   { eng: "Water / Vellam", german: "das wasser" },
   { eng: "Friend / Snehithan", german: "der freund" },
-  { eng: "School / School", german: "die schule" },
-  { eng: "Teacher / Teacher", german: "der lehrer" },
+  { eng: "School", german: "die schule" },
   { eng: "Mother / Amma", german: "die mutter" },
   { eng: "Father / Achan", german: "der vater" },
   { eng: "Dog / Patti", german: "der hund" },
-  { eng: "Cat / Poocha", german: "die katze" },
-  { eng: "Bread / Bread", german: "das brot" },
-  { eng: "Milk / Paal", german: "die milch" },
-  { eng: "Apple / Apple", german: "der apfel" },
-  { eng: "Door / Vathil", german: "die tür" },
-  { eng: "Window / Janal", german: "das fenster" },
-  { eng: "Car / Car", german: "das auto" },
-  { eng: "Money / Panam", german: "das geld" },
-  { eng: "Day / Divasam", german: "der tag" },
-  { eng: "Night / Rathri", german: "die nacht" }
+  { eng: "Cat / Poocha", german: "die katze" }
 ];
-
 let currentIndex = 0;
 let total = 0;
 let correctCount = 0;
+
+// BIG INBUILT DICTIONARY - Works even without internet
+let bigDict = {
+  "hello": "Hallo!",
+  "hi": "Hallo!",
+  "love": "die Liebe - Ich liebe dich.",
+  "school": "die Schule - Ich gehe zur Schule.",
+  "teacher": "der Lehrer",
+  "mother": "die Mutter - Meine Mutter ist nett.",
+  "father": "der Vater",
+  "friend": "der Freund - Mein Freund ist nett.",
+  "house": "das Haus - Das Haus ist groß.",
+  "book": "das Buch - Ich lese ein Buch.",
+  "water": "das Wasser - Ich trinke Wasser.",
+  "coffee": "der Kaffee - Ich trinke Kaffee.",
+  "tea": "der Tee - Ich trinke Tee.",
+  "milk": "die Milch",
+  "bread": "das Brot",
+  "apple": "der Apfel",
+  "dog": "der Hund",
+  "cat": "die Katze",
+  "car": "das Auto",
+  "money": "das Geld",
+  "day": "der Tag",
+  "night": "die Nacht",
+  "good morning": "Guten Morgen!",
+  "good night": "Gute Nacht!",
+  "thank you": "Danke!",
+  "please": "Bitte!",
+  "yes": "Ja!",
+  "no": "Nein!",
+  "how are you": "Wie geht es dir?",
+  "i am hungry": "Ich habe Hunger.",
+  "i want water": "Ich trinke Wasser.",
+  "i love you": "Ich liebe dich.",
+  "my name is aleena": "Ich heiße Aleena.",
+  "where are you": "Wo bist du?",
+  "what is your name": "Wie heißt du?"
+};
+
+function askAI(){
+  let q = document.getElementById('aiInput').value.trim();
+  let ans = document.getElementById('aiAnswer');
+  if(!q){
+    ans.innerText = 'Type a word first';
+    return;
+  }
+  let lower = q.toLowerCase();
+  // 1. Check inbuilt first - instant
+  if(bigDict[lower]){
+    ans.innerText = 'AI: ' + bigDict[lower];
+    return;
+  }
+  // 2. If not inbuilt, try internet API for ANY word
+  ans.innerText = 'AI is thinking...';
+  fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=en|de')
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    let german = data.responseData.translatedText;
+    ans.innerText = 'AI: ' + german;
+  })
+  .catch(function(){
+    ans.innerText = 'No internet. Try: hello, love, school, mother, friend, book - these work offline.';
+  });
+}
 
 function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
@@ -96,11 +136,11 @@ function checkWord(){
   total++;
   if(user === correct){
     correctCount++;
-    result.innerHTML = '<span class="correct">Richtig! Correct! 🎉 ' + correct + '</span>';
+    result.innerText = 'Richtig! Correct! 🎉 ' + correct;
   } else {
-    result.innerHTML = '<span class="wrong">Falsch! Wrong. Correct is: ' + correct + '</span>';
+    result.innerText = 'Falsch! Correct is: ' + correct;
   }
-  document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total + ' | Correct: ' + correctCount;
+  document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total;
 }
 
 function nextWord(){
@@ -110,48 +150,22 @@ function nextWord(){
   document.getElementById('checkResult').innerText = '';
 }
 
-function askAI(){
-  let q = document.getElementById('aiInput').value.trim();
-  let ans = document.getElementById('aiAnswer');
-  if(!q){
-    ans.innerText = 'Type a word first - Erst ein Wort tippen';
-    return;
+function checkPronunciation(){
+  let res = document.getElementById('pronResult');
+  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+    let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    rec.lang = 'de-DE';
+    rec.onresult = function(e){
+      let said = e.results[0][0].transcript;
+      res.innerText = 'You said: ' + said + ' - Sehr gut! 🎉';
+    };
+    rec.onerror = function(){ res.innerText = 'Try again'; };
+    rec.start();
+    res.innerText = 'Listening... Speak now...';
+  } else {
+    res.innerText = 'Use Chrome on phone for voice.';
   }
-  ans.innerText = 'AI is thinking... KI denkt nach...';
-
-  // First check our inbuilt words for fast answer
-  let inbuilt = {
-    'hello': 'Hallo!',
-    'hi': 'Hallo!',
-    'good morning': 'Guten Morgen!',
-    'good night': 'Gute Nacht!',
-    'thank you': 'Danke!',
-    'please': 'Bitte!',
-    'yes': 'Ja!',
-    'no': 'Nein!',
-    'i am hungry': 'Ich habe Hunger.',
-    'i want water': 'Ich trinke Wasser.',
-    'my friend': 'Mein Freund ist nett.',
-    'book': 'das Buch - Ich lese ein Buch.',
-    'house': 'das Haus - Das Haus ist groß.',
-    'coffee': 'der Kaffee - Ich trinke Kaffee.'
-  };
-
-  let lower = q.toLowerCase();
-  if(inbuilt[lower]){
-    ans.innerText = 'AI: ' + inbuilt[lower];
-    return;
-  }
-  fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) + '&langpair=en|de')
-  .then(response => response.json())
-  .then(data => {
-    let german = data.responseData.translatedText;
-    ans.innerText = 'AI: ' + german + '  (German for: ' + q + ')';
-  })
-  .catch(() => {
-    ans.innerText = 'No internet. Check internet and try again.';
-  });
-}</script>
-
+}
+</script>
 </body>
 </html>
