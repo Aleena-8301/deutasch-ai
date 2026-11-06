@@ -344,8 +344,9 @@ function nextWord(){
 }
 
 // ============ FULL CHECKPRONUNCIATION - 20 SENTENCES ============
+javascript// ===== SPEAKING - ONLY ONE COPY - DELETE ALL OTHERS =====
 let pronList = [
-  { de: "Ich trinke Kaffee", en: "I drink coffee / Njan chaya kudikkunnu" },
+  { de: "Ich trinke Kaffee", en: "I drink coffee" },
   { de: "Ich heiße Aleena", en: "My name is Aleena" },
   { de: "Ich komme aus Indien", en: "I am from India" },
   { de: "Ich komme aus Kerala", en: "I am from Kerala" },
@@ -355,13 +356,13 @@ let pronList = [
   { de: "Ich habe Hunger", en: "I am hungry" },
   { de: "Ich trinke Wasser", en: "I drink water" },
   { de: "Ich liebe meine Mutter", en: "I love my mother" },
-  { de: "Ich bin Studentin", en: "I am a student (girl)" },
+  { de: "Ich bin Studentin", en: "I am a student" },
   { de: "Das ist mein Haus", en: "This is my house" },
   { de: "Das ist mein Freund", en: "This is my friend" },
   { de: "Ich lerne Deutsch", en: "I learn German" },
   { de: "Ich gehe zur Schule", en: "I go to school" },
-  { de: "Danke schön", en: "Thank you very much" },
-  { de: "Bitte schön", en: "Please / You are welcome" },
+  { de: "Danke schön", en: "Thank you" },
+  { de: "Bitte schön", en: "Please" },
   { de: "Ich wohne in Kerala", en: "I live in Kerala" },
   { de: "Mein Vater ist nett", en: "My father is nice" },
   { de: "Ich mag Mango", en: "I like mango" }
@@ -369,57 +370,39 @@ let pronList = [
 let pronIndex = 0;
 let pronTotal = 0;
 let pronCorrect = 0;
+let isListening = false;
 
 function hearPron(){
-  let text = pronList[pronIndex].de;
-  let u = new SpeechSynthesisUtterance(text);
-  u.lang = 'de-DE';
-  u.rate = 0.8;
-  speechSynthesis.speak(u);
+  let u = new SpeechSynthesisUtterance(pronList[pronIndex].de);
+  u.lang = 'de-DE'; u.rate = 0.8; speechSynthesis.speak(u);
 }
 
 function nextPron(){
   pronIndex++;
-  if(pronIndex >= pronList.length){ pronIndex = 0; alert('You finished all 20 speaking sentences! 🎉 Start again!'); }
+  if(pronIndex >= pronList.length){ pronIndex = 0; alert('Finished 20! Start again 🎉'); }
   document.getElementById('pronSentence').innerText = pronList[pronIndex].de;
   document.getElementById('pronMeaning').innerText = pronList[pronIndex].en;
   document.getElementById('pronCount').innerText = 'Sentence ' + (pronIndex+1) + ' / 20';
   document.getElementById('pronResult').innerText = '';
 }
 
-
-let isListening = false;
-let pronTotal = 0;
-let pronCorrect = 0;
-
 function checkPronunciation(){
   let res = document.getElementById('pronResult');
-  let btn = document.querySelector('button[onclick="checkPronunciation()"]');
-
-  if(isListening){
-    res.innerText = '⏳ Already listening... Speak NOW! Say: ' + pronList[pronIndex].de;
-    return;
-  }
-
+  if(isListening){ res.innerText = '⏳ Already listening... Speak NOW!'; return; }
   if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
     res.innerText = 'Use Chrome for voice.';
     return;
   }
-
   let target = pronList[pronIndex].de.toLowerCase();
   let wordsArr = target.split(' ');
   let keyWord = wordsArr[wordsArr.length - 1];
   let firstWord = wordsArr[0];
-
   let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   rec.lang = 'de-DE';
   rec.interimResults = false;
   rec.continuous = false;
-
   isListening = true;
-  if(btn) btn.innerText = '🎤 Listening... Speak Now!';
   res.innerText = '🎤 Listening... Say LOUD: ' + pronList[pronIndex].de;
-
   rec.onresult = function(e){
     let heard = e.results[0][0].transcript.toLowerCase();
     pronTotal++;
@@ -428,32 +411,24 @@ function checkPronunciation(){
       pronCorrect++;
       res.innerText += ' - Sehr gut! 🎉 Correct!';
     } else {
-      res.innerText += ' - Try again. Key word is: ' + keyWord;
+      res.innerText += ' - Try again. Key word: ' + keyWord;
     }
     document.getElementById('pronScore').innerText = 'Speaking Score: ' + pronCorrect + ' / ' + pronTotal;
     isListening = false;
-    if(btn) btn.innerText = '🎤 Speak & Check';
   };
-
   rec.onerror = function(e){
     if(e.error === 'aborted'){
-      res.innerText = 'You clicked twice! Wait 2 seconds and click ONE time only.';
+      res.innerText = 'You clicked twice! Wait 2 sec, click ONE time.';
     } else if(e.error === 'not-allowed'){
-      res.innerText = '❌ Mic blocked! Click Lock icon on top -> Allow Microphone -> Refresh';
+      res.innerText = '❌ Mic blocked! Click Lock icon -> Allow Microphone -> Refresh';
     } else if(e.error === 'no-speech'){
-      res.innerText = '❌ I heard nothing. Speak LOUDER and closer to laptop.';
+      res.innerText = '❌ Heard nothing. Speak LOUDER, closer, within 2 sec.';
     } else {
       res.innerText = 'Try again - ' + e.error;
     }
     isListening = false;
-    if(btn) btn.innerText = '🎤 Speak & Check';
   };
-
-  rec.onend = function(){
-    isListening = false;
-    if(btn) btn.innerText = '🎤 Speak & Check';
-  };
-
+  rec.onend = function(){ isListening = false; };
   rec.start();
 }
 }</script>
