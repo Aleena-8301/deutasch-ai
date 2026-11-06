@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deutsch AI v4 - Learn German</title>
+<title>Deutsch AI v6 - A1 Complete</title>
 <style>
 body { font-family: Arial; background: #f4f4f4; margin: 0; padding: 20px; }
 h1 { text-align: center; }
@@ -16,20 +16,21 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 </head>
 <body>
 
-<h1>Deutsch AI 🤖 DE - v4</h1>
-<p>Malayalam to German - Type ANY Word</p>
+<h1>Deutsch AI 🤖 DE - v6 A1</h1>
+<p>A1 Complete - 200 Words + Translator</p>
 
 <div class="card center">
 <h2>🤖 AI Translator - ANY Word</h2>
-<p>Type English / Malayalam word, get German</p>
 <input id="aiInput" type="text" placeholder="Type: I am from India">
 <button onclick="askAI()">Translate - Übersetzen</button>
 <p id="aiAnswer" style="font-weight:bold; color:#0066cc; font-size:18px;"></p>
+<button onclick="speakAI()" style="background:#ff9800;">🔊 Hear German - Hören</button>
 </div>
 
 <div class="card center">
-<h2>✍️ Type & Check Words</h2>
+<h2>✍️ A1 Words - Type & Check</h2>
 <h3 id="showWord" style="color:#0066cc; font-size:22px;">Coffee / Chaya</h3>
+<p id="wordCount">Word 1 / 200</p>
 <input id="userAnswer" type="text" placeholder="Type: der Kaffee">
 <button onclick="checkWord()">Check - Prüfen</button>
 <p id="checkResult"></p>
@@ -38,7 +39,7 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 </div>
 
 <div class="card center">
-<h2>🎤 AI Pronunciation Check</h2>
+<h2>🎤 Pronunciation</h2>
 <p>Say: Ich trinke Kaffee</p>
 <button onclick="checkPronunciation()">Speak & Check</button>
 <p id="pronResult"></p>
@@ -46,20 +47,210 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 
 <script>
 let words = [
-  { eng: "Coffee / Chaya", german: "der kaffee" },
-  { eng: "House / Veedu", german: "das haus" },
-  { eng: "Book / Pusthakam", german: "das buch" },
-  { eng: "Water / Vellam", german: "das wasser" },
-  { eng: "Friend / Snehithan", german: "der freund" },
-  { eng: "School", german: "die schule" },
-  { eng: "Mother / Amma", german: "die mutter" },
-  { eng: "Father / Achan", german: "der vater" },
-  { eng: "Dog / Patti", german: "der hund" },
-  { eng: "Cat / Poocha", german: "die katze" }
+// FAMILY - Familie
+{ eng: "Mother / Amma", german: "die mutter" },
+{ eng: "Father / Achan", german: "der vater" },
+{ eng: "Sister / Chechi", german: "die schwester" },
+{ eng: "Brother / Chetan", german: "der bruder" },
+{ eng: "Baby / Kunju", german: "das baby" },
+{ eng: "Child / Kutti", german: "das kind" },
+{ eng: "Man / Purushan", german: "der mann" },
+{ eng: "Woman / Sthree", german: "die frau" },
+{ eng: "Friend / Snehithan", german: "der freund" },
+{ eng: "Family / Kudumbam", german: "die familie" },
+{ eng: "Son / Makan", german: "der sohn" },
+{ eng: "Daughter / Makal", german: "die tochter" },
+{ eng: "Grandmother / Ammuma", german: "die großmutter" },
+{ eng: "Grandfather / Appuppan", german: "der großvater" },
+// HOUSE - Haus
+{ eng: "House / Veedu", german: "das haus" },
+{ eng: "Room / Muri", german: "das zimmer" },
+{ eng: "Kitchen / Aduppu", german: "die küche" },
+{ eng: "Bathroom / Bathroom", german: "das bad" },
+{ eng: "Bedroom / Bedroom", german: "das schlafzimmer" },
+{ eng: "Table / Mesa", german: "der tisch" },
+{ eng: "Chair / Chair", german: "der stuhl" },
+{ eng: "Bed / Kattil", german: "das bett" },
+{ eng: "Door / Vathil", german: "die tür" },
+{ eng: "Window / Janal", german: "das fenster" },
+{ eng: "Lamp / Lamp", german: "die lampe" },
+{ eng: "Key / Thakkol", german: "der schlüssel" },
+{ eng: "Garden / Thottam", german: "der garten" },
+{ eng: "Car / Car", german: "das auto" },
+// FOOD - Essen
+{ eng: "Coffee / Chaya", german: "der kaffee" },
+{ eng: "Tea / Chaya", german: "der tee" },
+{ eng: "Milk / Paal", german: "die milch" },
+{ eng: "Bread / Roti", german: "das brot" },
+{ eng: "Water / Vellam", german: "das wasser" },
+{ eng: "Apple / Apple", german: "der apfel" },
+{ eng: "Banana / Pazham", german: "die banane" },
+{ eng: "Mango / Manga", german: "die mango" },
+{ eng: "Rice / Choru", german: "der reis" },
+{ eng: "Fish / Meen", german: "der fisch" },
+{ eng: "Egg / Mutta", german: "das ei" },
+{ eng: "Meat / Irachi", german: "das fleisch" },
+{ eng: "Cheese / Cheese", german: "der käse" },
+{ eng: "Butter / Venna", german: "die butter" },
+{ eng: "Sugar / Panchasara", german: "der zucker" },
+{ eng: "Salt / Uppu", german: "das salz" },
+{ eng: "Food / Bhakshanam", german: "das essen" },
+{ eng: "Breakfast / Breakfast", german: "das frühstück" },
+{ eng: "Lunch / Lunch", german: "das mittagessen" },
+{ eng: "Dinner / Dinner", german: "das abendessen" },
+{ eng: "Fruit / Pazham", german: "die frucht" },
+{ eng: "Vegetable / Pachakkari", german: "das gemüse" },
+{ eng: "Chocolate / Chocolate", german: "die schokolade" },
+{ eng: "Cake / Cake", german: "der kuchen" },
+// BODY - Körper
+{ eng: "Head / Thala", german: "der kopf" },
+{ eng: "Eye / Kannu", german: "das auge" },
+{ eng: "Nose / Mookku", german: "die nase" },
+{ eng: "Mouth / Vaay", german: "der mund" },
+{ eng: "Ear / Chevi", german: "das ohr" },
+{ eng: "Hand / Kai", german: "die hand" },
+{ eng: "Leg / Kaal", german: "der fuß" },
+{ eng: "Arm / Kai", german: "der arm" },
+{ eng: "Hair / Mudi", german: "das haar" },
+{ eng: "Tooth / Pallu", german: "der zahn" },
+{ eng: "Heart / Hridayam", german: "das herz" },
+{ eng: "Body / Shareeram", german: "der körper" },
+// SCHOOL & JOB - Schule & Beruf
+{ eng: "School / School", german: "die schule" },
+{ eng: "Teacher / Teacher", german: "der lehrer" },
+{ eng: "Student / Vidyarthi", german: "der student" },
+{ eng: "Book / Pusthakam", german: "das buch" },
+{ eng: "Pen / Pen", german: "der stift" },
+{ eng: "Doctor / Doctor", german: "der arzt" },
+{ eng: "Nurse / Nurse", german: "die krankenschwester" },
+{ eng: "Hospital / Hospital", german: "das krankenhaus" },
+{ eng: "Work / Joli", german: "die arbeit" },
+{ eng: "Job / Joli", german: "der beruf" },
+{ eng: "Money / Panam", german: "das geld" },
+{ eng: "Office / Office", german: "das büro" },
+{ eng: "Shop / Kada", german: "das geschäft" },
+{ eng: "Market / Market", german: "der markt" },
+// TIME - Zeit
+{ eng: "Day / Divasam", german: "der tag" },
+{ eng: "Night / Rathri", german: "die nacht" },
+{ eng: "Morning / Ravile", german: "der morgen" },
+{ eng: "Evening / Vaikitt", german: "der abend" },
+{ eng: "Week / Aazhcha", german: "die woche" },
+{ eng: "Month / Masam", german: "der monat" },
+{ eng: "Year / Varsham", german: "das jahr" },
+{ eng: "Hour / Mani", german: "die stunde" },
+{ eng: "Minute / Minute", german: "die minute" },
+{ eng: "Monday", german: "der montag" },
+{ eng: "Tuesday", german: "der dienstag" },
+{ eng: "Wednesday", german: "der mittwoch" },
+{ eng: "Thursday", german: "der donnerstag" },
+{ eng: "Friday", german: "der freitag" },
+{ eng: "Saturday", german: "der samstag" },
+{ eng: "Sunday", german: "der sonntag" },
+{ eng: "Today / Innu", german: "heute" },
+{ eng: "Tomorrow / Naale", german: "morgen" },
+{ eng: "Yesterday / Innale", german: "gestern" },
+// WEATHER & NATURE - Wetter
+{ eng: "Sun / Suryan", german: "die sonne" },
+{ eng: "Moon / Chandran", german: "der mond" },
+{ eng: "Rain / Mazha", german: "der regen" },
+{ eng: "Snow / Snow", german: "der schnee" },
+{ eng: "Cloud / Megham", german: "die wolke" },
+{ eng: "Wind / Katt", german: "der wind" },
+{ eng: "Flower / Poo", german: "die blume" },
+{ eng: "Tree / Maram", german: "der baum" },
+{ eng: "Bird / Pakshi", german: "der vogel" },
+{ eng: "Dog / Patti", german: "der hund" },
+{ eng: "Cat / Poocha", german: "die katze" },
+{ eng: "Horse / Kuthira", german: "das pferd" },
+{ eng: "Cow / Pasu", german: "die kuh" },
+// TRAVEL - Reisen
+{ eng: "Road / Road", german: "die straße" },
+{ eng: "Bus / Bus", german: "der bus" },
+{ eng: "Train / Train", german: "der zug" },
+{ eng: "Plane / Plane", german: "das flugzeug" },
+{ eng: "Ticket / Ticket", german: "das ticket" },
+{ eng: "Station / Station", german: "der bahnhof" },
+{ eng: "Airport / Airport", german: "der flughafen" },
+{ eng: "City / Nagaram", german: "die stadt" },
+{ eng: "Village / Gramam", german: "das dorf" },
+{ eng: "Country / Rajyam", german: "das land" },
+{ eng: "Hotel / Hotel", german: "das hotel" },
+{ eng: "Phone / Phone", german: "das handy" },
+{ eng: "Computer / Computer", german: "der computer" },
+{ eng: "Photo / Photo", german: "das foto" },
+// COLOURS - Farben
+{ eng: "Red / Chuvappu", german: "rot" },
+{ eng: "Blue / Neela", german: "blau" },
+{ eng: "Green / Pacha", german: "grün" },
+{ eng: "Yellow / Manja", german: "gelb" },
+{ eng: "Black / Karuppu", german: "schwarz" },
+{ eng: "White / Vella", german: "weiß" },
+{ eng: "Pink / Pink", german: "rosa" },
+{ eng: "Orange / Orange", german: "orange" },
+// CLOTHES - Kleidung
+{ eng: "Shirt / Shirt", german: "das hemd" },
+{ eng: "Pant / Pant", german: "die hose" },
+{ eng: "Dress / Dress", german: "das kleid" },
+{ eng: "Shoe / Chappal", german: "der schuh" },
+{ eng: "Hat / Thoppi", german: "der hut" },
+{ eng: "Jacket / Jacket", german: "die jacke" },
+{ eng: "Bag / Bag", german: "die tasche" },
+{ eng: "Watch / Watch", german: "die uhr" },
+{ eng: "Glasses / Kannada", german: "die brille" },
+// FEELINGS & A1 VERBS WORDS
+{ eng: "Love / Sneham", german: "die liebe" },
+{ eng: "Happiness / Santhosham", german: "das glück" },
+{ eng: "Question / Chodyam", german: "die frage" },
+{ eng: "Answer / Utharam", german: "die antwort" },
+{ eng: "Language / Bhasha", german: "die sprache" },
+{ eng: "Name / Peru", german: "der name" },
+{ eng: "Life / Jeevitham", german: "das leben" },
+{ eng: "World / Lokam", german: "die welt" },
+{ eng: "Music / Sangeetham", german: "die musik" },
+{ eng: "Film / Cinema", german: "der film" },
+{ eng: "Sport / Kali", german: "der sport" },
+{ eng: "Game / Kali", german: "das spiel" },
+{ eng: "Park / Park", german: "der park" },
+{ eng: "River / Puzha", german: "der fluss" },
+{ eng: "Sea / Kadal", german: "das meer" },
+{ eng: "Mountain / Mala", german: "der berg" },
+{ eng: "Beach / Beach", german: "der strand" },
+{ eng: "Fire / Thee", german: "das feuer" },
+{ eng: "Light / Velicham", german: "das licht" },
+{ eng: "Dark / Irutt", german: "dunkel" },
+{ eng: "Hot / Choodu", german: "heiß" },
+{ eng: "Cold / Thanuppu", german: "kalt" },
+{ eng: "Big / Valuthu", german: "groß" },
+{ eng: "Small / Cheruthu", german: "klein" },
+{ eng: "Good / Nallathu", german: "gut" },
+{ eng: "Bad / Mosham", german: "schlecht" },
+{ eng: "New / Puthiya", german: "neu" },
+{ eng: "Old / Pazhaya", german: "alt" },
+{ eng: "Happy / Santhosham", german: "glücklich" },
+{ eng: "Hungry / Vishappu", german: "hungrig" },
+{ eng: "Thirsty / Dhaham", german: "durstig" },
+{ eng: "Tired / Ksheenam", german: "müde" },
+{ eng: "Sick / Asugam", german: "krank" },
+{ eng: "Beautiful / Bh beautiful", german: "schön" },
+{ eng: "Fast / Vegam", german: "schnell" },
+{ eng: "Slow / Slow", german: "langsam" },
+{ eng: "Easy / Eluppam", german: "leicht" },
+{ eng: "Hard / Budhimuttu", german: "schwer" },
+{ eng: "Right / Shari", german: "richtig" },
+{ eng: "Wrong / Thett", german: "falsch" },
+{ eng: "Free / Free", german: "frei" },
+{ eng: "Full / Niranja", german: "voll" },
+{ eng: "Empty / Ozhiv", german: "leer" },
+{ eng: "Open / Thurannu", german: "offen" },
+{ eng: "Closed / Adachu", german: "geschlossen" },
+{ eng: "Clean / Vruthiyulla", german: "sauber" },
+{ eng: "Dirty / Azhukku", german: "schmutzig" }
 ];
 let currentIndex = 0;
 let total = 0;
 let correctCount = 0;
+let usedIndexes = [];
 
 function askAI(){
   let q = document.getElementById('aiInput').value.trim();
@@ -77,28 +268,15 @@ function askAI(){
     "i love my mother": "Ich liebe meine Mutter.",
     "i love you": "Ich liebe dich.",
     "how are you": "Wie geht es dir?",
-    "hello": "Hallo!",
-    "hi": "Hallo!",
-    "good morning": "Guten Morgen!",
-    "good night": "Gute Nacht!",
-    "thank you": "Danke!",
-    "please": "Bitte!",
-    "love": "die Liebe",
-    "school": "die Schule",
-    "mother": "die Mutter",
-    "father": "der Vater",
-    "friend": "der Freund",
-    "house": "das Haus",
-    "book": "das Buch",
-    "water": "das Wasser",
-    "coffee": "der Kaffee",
-    "india": "Indien",
-    "germany": "Deutschland"
+    "hello": "Hallo!", "hi": "Hallo!",
+    "good morning": "Guten Morgen!", "good night": "Gute Nacht!",
+    "thank you": "Danke!", "please": "Bitte!",
+    "love": "die Liebe", "school": "die Schule", "mother": "die Mutter",
+    "father": "der Vater", "friend": "der Freund", "house": "das Haus",
+    "book": "das Buch", "water": "das Wasser", "coffee": "der Kaffee",
+    "india": "Indien", "germany": "Deutschland"
   };
-  if(correctDict[lower]){
-    ans.innerText = 'AI: ' + correctDict[lower];
-    return;
-  }
+  if(correctDict[lower]){ ans.innerText = 'AI: ' + correctDict[lower]; return; }
   ans.innerText = 'AI is thinking...';
   fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=de&dt=t&q=' + encodeURIComponent(q))
   .then(function(res){ return res.json(); })
@@ -107,11 +285,13 @@ function askAI(){
     for(let i=0; i<data[0].length; i++){ german += data[0][i][0]; }
     ans.innerText = 'AI: ' + german;
   })
-  .catch(function(){
-    ans.innerText = 'No internet. Try: I am from India, hello, love';
-  });
+  .catch(function(){ ans.innerText = 'No internet. Try: I am from India, hello, love'; });
 }
-
+function speakAI(){
+  let text = document.getElementById('aiAnswer').innerText.replace('AI: ','');
+  if(!text || text==='Type a word first'){ alert('Translate first!'); return; }
+  let u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; speechSynthesis.speak(u);
+}
 function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
   let correct = words[currentIndex].german;
@@ -122,8 +302,13 @@ function checkWord(){
   document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total;
 }
 function nextWord(){
-  currentIndex = Math.floor(Math.random() * words.length);
+  if(usedIndexes.length >= words.length){ usedIndexes = []; alert('A1 Complete! You finished all 200 words! 🎉 Start again!'); }
+  let r;
+  do { r = Math.floor(Math.random() * words.length); } while(usedIndexes.includes(r));
+  usedIndexes.push(r);
+  currentIndex = r;
   document.getElementById('showWord').innerText = words[currentIndex].eng;
+  document.getElementById('wordCount').innerText = 'Word ' + usedIndexes.length + ' / ' + words.length;
   document.getElementById('userAnswer').value = '';
   document.getElementById('checkResult').innerText = '';
 }
