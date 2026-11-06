@@ -257,6 +257,50 @@ function askAI(){
   let ans = document.getElementById('aiAnswer');
   if(!q){ ans.innerText = 'Type a word first'; return; }
   let lower = q.toLowerCase().replace(/\s+/g, ' ');
+
+  // MANGLISH -> GERMAN - For Kerala words like chaya, vellam
+  let manglishDict = {
+    "chaya": "der Tee - Ich trinke Tee. (Chaya = Tea)",
+    "chayya": "der Tee - Ich trinke Tee.",
+    "kaffee": "der Kaffee",
+    "vellam": "das Wasser - Ich trinke Wasser. (Vellam = Water)",
+    "veedu": "das Haus - Das Haus ist groß. (Veedu = House)",
+    "pusthakam": "das Buch - Ich lese ein Buch. (Pusthakam = Book)",
+    "snehithan": "der Freund - Mein Freund ist nett.",
+    "amma": "die Mutter - Meine Mutter ist nett. (Amma = Mother)",
+    "achan": "der Vater - Mein Vater ist nett. (Achan = Father)",
+    "chechi": "die Schwester (Chechi = Sister)",
+    "chettan": "der Bruder (Chettan = Brother)",
+    "kunju": "das Baby (Kunju = Baby)",
+    "kutti": "das Kind (Kutti = Child)",
+    "patti": "der Hund (Patti = Dog)",
+    "poocha": "die Katze (Poocha = Cat)",
+    "paal": "die Milch (Paal = Milk)",
+    "choru": "der Reis (Choru = Rice)",
+    "meen": "der Fisch (Meen = Fish)",
+    "mutta": "das Ei (Mutta = Egg)",
+    "pazham": "die Banane (Pazham = Banana)",
+    "manga": "die Mango (Manga = Mango)",
+    "poo": "die Blume (Poo = Flower)",
+    "maram": "der Baum (Maram = Tree)",
+    "mazha": "der Regen (Mazha = Rain)",
+    "suryan": "die Sonne (Suryan = Sun)",
+    "chandran": "der Mond (Chandran = Moon)",
+    "divasam": "der Tag (Divasam = Day)",
+    "rathri": "die Nacht (Rathri = Night)",
+    "panam": "das Geld (Panam = Money)",
+    "sneham": "die Liebe (Sneham = Love)",
+    "kudumbam": "die Familie (Kudumbam = Family)",
+    "school": "die Schule",
+    "veetil": "zu Hause (Veetil = At home)"
+  };
+
+  if(manglishDict[lower]){
+    ans.innerText = 'AI: ' + manglishDict[lower];
+    return;
+  }
+
+  // ENGLISH -> GERMAN
   let correctDict = {
     "i am from india": "Ich komme aus Indien.",
     "i am aleena": "Ich bin Aleena.",
@@ -266,7 +310,6 @@ function askAI(){
     "i am hungry": "Ich habe Hunger.",
     "i want water": "Ich trinke Wasser.",
     "i love my mother": "Ich liebe meine Mutter.",
-    "i love you": "Ich liebe dich.",
     "how are you": "Wie geht es dir?",
     "hello": "Hallo!", "hi": "Hallo!",
     "good morning": "Guten Morgen!", "good night": "Gute Nacht!",
@@ -274,9 +317,11 @@ function askAI(){
     "love": "die Liebe", "school": "die Schule", "mother": "die Mutter",
     "father": "der Vater", "friend": "der Freund", "house": "das Haus",
     "book": "das Buch", "water": "das Wasser", "coffee": "der Kaffee",
-    "india": "Indien", "germany": "Deutschland"
+    "tea": "der Tee", "india": "Indien", "germany": "Deutschland"
   };
+
   if(correctDict[lower]){ ans.innerText = 'AI: ' + correctDict[lower]; return; }
+
   ans.innerText = 'AI is thinking...';
   fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=de&dt=t&q=' + encodeURIComponent(q))
   .then(function(res){ return res.json(); })
@@ -285,9 +330,8 @@ function askAI(){
     for(let i=0; i<data[0].length; i++){ german += data[0][i][0]; }
     ans.innerText = 'AI: ' + german;
   })
-  .catch(function(){ ans.innerText = 'No internet. Try: I am from India, hello, love'; });
-}
-function speakAI(){
+  .catch(function(){ ans.innerText = 'No internet. Try: chaya, vellam, veedu, amma'; });
+}function speakAI(){
   let text = document.getElementById('aiAnswer').innerText.replace('AI: ','');
   if(!text || text==='Type a word first'){ alert('Translate first!'); return; }
   let u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; speechSynthesis.speak(u);
