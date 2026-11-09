@@ -323,26 +323,19 @@ function speakAI(){
   let u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; speechSynthesis.speak(u);
 }
 
-// ============ QUIZ ============
 function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
-  let correct = words[currentIndex].german;
+  let correct = words[currentIndex].german.toLowerCase().trim();
   let result = document.getElementById('checkResult');
   total++;
-  if(user === correct){ correctCount++; result.innerText = 'Richtig! Correct! 🎉 ' + correct; }
-  else { result.innerText = 'Falsch! Correct is: ' + correct; }
+  if(user === correct){ 
+    correctCount++; 
+    result.innerText = 'Richtig! Correct! 🎉 ' + words[currentIndex].german; 
+  }
+  else { 
+    result.innerText = 'Falsch! Correct is: ' + words[currentIndex].german; 
+  }
   document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total;
-}
-function nextWord(){
-  if(usedIndexes.length >= words.length){ usedIndexes = []; alert('A1 Complete! You finished all words! 🎉'); }
-  let r;
-  do { r = Math.floor(Math.random() * words.length); } while(usedIndexes.includes(r));
-  usedIndexes.push(r);
-  currentIndex = r;
-  document.getElementById('showWord').innerText = words[currentIndex].eng;
-  document.getElementById('wordCount').innerText = 'Word ' + usedIndexes.length + ' / ' + words.length;
-  document.getElementById('userAnswer').value = '';
-  document.getElementById('checkResult').innerText = '';
 }
 
 // ============ SPEAKING - 20 SENTENCES - ONLY ONE checkPronunciation IN WHOLE FILE ============
