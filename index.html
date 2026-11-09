@@ -248,8 +248,12 @@ function askAI(){
   if(!q){ ans.innerText = 'Type a word first'; return; }
   let lower = q.toLowerCase().replace(/\s+/g, ' ');
   let manglishDict = {
-    "chaya": "der Tee - Ich trinke Tee. (Chaya = Tea)",
-    "chayya": "der Tee - Ich trinke Tee.",
+    "chaya": "der Kaffee - Ich trinke Kaffee. (Chaya = Coffee)",
+    "chayya": "der Kaffee - Ich trinke Kaffee.",
+    "kaffee": "der Kaffee - Ich trinke Kaffee.",
+    "coffee": "der Kaffee - Ich trinke Kaffee.",
+    "tee": "der Tee - Ich trinke Tee.",
+    "tea": "der Tee - Ich trinke Tee.",
     "vellam": "das Wasser - Ich trinke Wasser.",
     "veedu": "das Haus - Das Haus ist groß.",
     "pusthakam": "das Buch - Ich lese ein Buch.",
@@ -318,8 +322,10 @@ function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
   let correct = words[currentIndex].german.toLowerCase().trim();
   let result = document.getElementById('checkResult');
+  let userNoArt = user.replace(/^(der|die|das)\s+/, '');
+  let correctNoArt = correct.replace(/^(der|die|das)\s+/, '');
   total++;
-  if(user === correct){ 
+  if(user === correct || userNoArt === correctNoArt){ 
     correctCount++; 
     result.innerText = 'Richtig! Correct! 🎉 ' + words[currentIndex].german; 
   } else { 
