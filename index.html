@@ -15,10 +15,8 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 </style>
 </head>
 <body>
-
 <h1>Deutsch AI 🤖 DE - v8</h1>
 <p>A1 Complete - Translator + 188 Words + 20 Speaking</p>
-
 <div class="card center">
 <h2>🤖 AI Translator - ANY Word</h2>
 <input id="aiInput" type="text" placeholder="Type: chaya / I am from India">
@@ -26,10 +24,9 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 <p id="aiAnswer" style="font-weight:bold; color:#0066cc; font-size:18px;"></p>
 <button onclick="speakAI()" style="background:#ff9800;">🔊 Hear German - Hören</button>
 </div>
-
 <div class="card center">
 <h2>✍️ A1 Words - Type & Check</h2>
-<h3 id="showWord" style="color:#0066cc; font-size:22px;">Coffee / Chaya</h3>
+<h3 id="showWord" style="color:#0066cc; font-size:22px;">Mother / Amma</h3>
 <p id="wordCount">Word 1 / 188</p>
 <input id="userAnswer" type="text" placeholder="Type: der Kaffee">
 <button onclick="checkWord()">Check - Prüfen</button>
@@ -37,7 +34,6 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 <p id="scoreText">Score: 0 / 0</p>
 <button onclick="nextWord()" style="background:#28a745;">Next Word ➡️</button>
 </div>
-
 <div class="card center">
 <h2>🎤 Speak - 20 A1 Sentences</h2>
 <h3 id="pronSentence" style="color:#0066cc; font-size:20px;">Ich trinke Kaffee</h3>
@@ -51,9 +47,7 @@ input { width: 90%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; d
 <button onclick="testMic()" style="background:#ff0000; font-size:14px;">🔴 Test Mic - Click Me First</button>
 <p id="micTest"></p>
 </div>
-
 <script>
-// ============ WORDS - 188 A1 ============
 let words = [
 { eng: "Mother / Amma", german: "die mutter" },
 { eng: "Father / Achan", german: "der vater" },
@@ -248,8 +242,6 @@ let currentIndex = 0;
 let total = 0;
 let correctCount = 0;
 let usedIndexes = [];
-
-// ============ TRANSLATOR ============
 function askAI(){
   let q = document.getElementById('aiInput').value.trim();
   let ans = document.getElementById('aiAnswer');
@@ -322,7 +314,6 @@ function speakAI(){
   if(!text || text==='Type a word first'){ alert('Translate first!'); return; }
   let u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; speechSynthesis.speak(u);
 }
-
 function checkWord(){
   let user = document.getElementById('userAnswer').value.toLowerCase().trim();
   let correct = words[currentIndex].german.toLowerCase().trim();
@@ -331,18 +322,13 @@ function checkWord(){
   if(user === correct){ 
     correctCount++; 
     result.innerText = 'Richtig! Correct! 🎉 ' + words[currentIndex].german; 
-  }
-  else { 
+  } else { 
     result.innerText = 'Falsch! Correct is: ' + words[currentIndex].german; 
   }
   document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total;
 }
-
 function nextWord(){
-  if(usedIndexes.length >= words.length){ 
-    usedIndexes = []; 
-    alert('A1 Complete! You finished all words! 🎉'); 
-  }
+  if(usedIndexes.length >= words.length){ usedIndexes = []; alert('A1 Complete! You finished all words! 🎉'); }
   let r;
   do { r = Math.floor(Math.random() * words.length); } while(usedIndexes.includes(r));
   usedIndexes.push(r);
@@ -352,7 +338,6 @@ function nextWord(){
   document.getElementById('userAnswer').value = '';
   document.getElementById('checkResult').innerText = '';
 }
-// ============ SPEAKING - 20 SENTENCES - ONLY ONE checkPronunciation IN WHOLE FILE ============
 let pronList = [
   { de: "Ich trinke Kaffee", en: "I drink coffee / Njan chaya kudikkunnu" },
   { de: "Ich heiße Aleena", en: "My name is Aleena" },
@@ -379,7 +364,6 @@ let pronIndex = 0;
 let pronTotal = 0;
 let pronCorrect = 0;
 let isListening = false;
-
 function hearPron(){
   let u = new SpeechSynthesisUtterance(pronList[pronIndex].de);
   u.lang = 'de-DE'; u.rate = 0.8; speechSynthesis.speak(u);
