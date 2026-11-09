@@ -338,6 +338,20 @@ function checkWord(){
   document.getElementById('scoreText').innerText = 'Score: ' + correctCount + ' / ' + total;
 }
 
+function nextWord(){
+  if(usedIndexes.length >= words.length){ 
+    usedIndexes = []; 
+    alert('A1 Complete! You finished all words! 🎉'); 
+  }
+  let r;
+  do { r = Math.floor(Math.random() * words.length); } while(usedIndexes.includes(r));
+  usedIndexes.push(r);
+  currentIndex = r;
+  document.getElementById('showWord').innerText = words[currentIndex].eng;
+  document.getElementById('wordCount').innerText = 'Word ' + usedIndexes.length + ' / ' + words.length;
+  document.getElementById('userAnswer').value = '';
+  document.getElementById('checkResult').innerText = '';
+}
 // ============ SPEAKING - 20 SENTENCES - ONLY ONE checkPronunciation IN WHOLE FILE ============
 let pronList = [
   { de: "Ich trinke Kaffee", en: "I drink coffee / Njan chaya kudikkunnu" },
